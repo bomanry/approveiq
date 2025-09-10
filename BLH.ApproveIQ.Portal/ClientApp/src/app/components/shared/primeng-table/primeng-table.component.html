@@ -1,0 +1,149 @@
+<div class="flex gap-3 mb-3">
+    <button type="button" pButton pRipple icon="pi pi-file" label="CSV" (click)="dataTable.exportCSV()" *ngIf="hasCsvExport" pTooltip="CSV"
+        tooltipPosition="bottom"></button>
+    <button pButton class="p-button-outlined" label="Clear" icon="pi pi-filter-slash" (click)="clear(dataTable)" *ngIf="hasClearFilters"
+        pTooltip="Clear Filters" tooltipPosition="bottom"></button>
+    <button pButton *ngIf="hasAddAction" class="p-button-raised p-add-button" icon="pi pi-plus" (click)="onAddClicked.emit()"
+        [label]="addActionLabel" [pTooltip]="addActionLabel" tooltipPosition="bottom"></button>
+    <ng-container *ngFor="let actionLink of actionLinks">
+        <button pButton class="p-button-raised " [icon]="(actionLink.icon ? 'pi ' +actionLink.icon :'')" (click)="actionLink.action()"
+            [label]="actionLink.label" [pTooltip]="actionLink.label" tooltipPosition="bottom"></button>
+    </ng-container>
+</div>
+<div class="card">
+    <p-table #dataTable [value]="dataList" [lazy]="lazy"
+        (onLazyLoad)="emitOnLazyLoad($event, dataTable)" styleClass="w-100 p-datatable-sm p-datatable-striped" [paginator]="paginator" [rows]="rows"
+        [totalRecords]="totalRecords" [loading]="loading" responsiveLayout="stack" [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="rowsPerPageOptions" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [columns]="cols"
+        [exportHeader]="customExportHeaderField" [sortField]="sortField" [sortOrder]="sortOrder" breakpoint="960px" [first]="first"
+        [globalFilterFields]="globalFilterFields">
+        <ng-template pTemplate="caption">
+            <div class="flex justify-content-between" *ngIf="hasSearchBox">
+                <span class="p-input-icon-left" [ngClass]="searchBoxOnRight ? 'ml-auto' : 'mr-auto'">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="filter(dataTable, $event)" placeholder="Search keyword"
+                        [(ngModel)]="searchBoxContent" [ngModelOptions]="{standalone: true}" class="w-100" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th pResizableColumn [pSortableColumn]="(column.sortable != undefined && !column.sortable) ? null : column.field" *ngFor="let column of columns"
+                    [attr.style]="column.style ? column.style : ''">
+                    &nbsp;{{column.header}}
+                    <p-sortIcon [hidden]="column.sortable != undefined && !column.sortable" [field]="column.field"></p-sortIcon>
+                    <p-columnFilter *ngIf="column.filterType" [type]="column.filterType" [field]="column.field" display="menu">
+                    </p-columnFilter>
+                </th>
+                <th *ngIf="hasEditButton" class="p-table-button-cell"></th>
+                <th *ngIf="hasDeleteButton" class="p-table-button-cell"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-columns="columns">
+            <tr>
+                <ng-container *ngFor="let col of columns">
+                    <td class="p-text-center text-overflow" [attr.style]="col.style">
+                        <ng-container *ngIf="!col.condition || col.condition(data)">
+                            <span class="p-column-title">{{col.header}}</span>
+                            <ng-container *ngIf="!col.type; else customColumn;">
+                              <span class="p-table-data"
+                                    [ngClass]="!!col.link ? 'link-table-data' : ''"
+                                    (click)="checkLinkAndCallIfPossible(col,
+                                      (col.linkIdField ? data[col.linkIdField] : null))"
+                              >
+                                {{data[col.field] ? data[col.field] : "--"}}
+                              </span>
+                            </ng-container>
+                          <ng-template #customColumn>
+                            <ng-container *ngIf="!!col.link; else noLink">
+                              <a [routerLink]="col.link">
+                                <ng-container *ngTemplateOutlet="content"></ng-container>
+                              </a>
+                            </ng-container>
+                          </ng-template>
+                          <ng-template #noLink>
+                            <ng-container *ngTemplateOutlet="content"></ng-container>
+                          </ng-template>
+                          <ng-template #content>
+                              <ng-container *ngIf="isSelectable(data)">
+                                <p-checkbox [(ngModel)]="data['checkboxStatus']" [binary]="true" inputId="binary"></p-checkbox>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Mask'">
+                                  <span class="p-table-data">{{data[col.field] | mask: col.maskFormat }}</span>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Date'">
+                                  <span class="p-table-data">{{data[col.field] | date: col.dateFormat }}</span>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'UTCDate'">
+                                <span class="p-table-data">{{data[col.field] + "Z" | date: col.dateFormat }}</span>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Scaled Value'">
+                                <span class="p-table-data">{{data[col.field] ? (data[col.field]+"/"+col.maxScale) : "--"}}</span>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'GradeLevel'">
+                                <span class="p-table-data">{{data[col.field] ? data[col.field] : data[col.field] === 0 ? "K" : "--"}}</span>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Boolean'">
+                                  <span class="p-column-title">{{col.header}}</span>
+                                  <i class="pi"
+                                      [ngClass]="{'true-icon pi-check-circle': data[col.field], 'false-icon pi-times-circle': !data[col.field]}"></i>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Inverted Boolean'">
+                                <span class="p-column-title">{{col.header}}</span>
+                                <i class="pi"
+                                   [ngClass]="{'true-icon pi-check-circle': !data[col.field], 'false-icon pi-times-circle': data[col.field]}"></i>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Checkmark Only'">
+                                <span class="p-column-title">{{col.header}}</span>
+                                <i class="pi true-icon pi-check-circle" *ngIf="data[col.field]"></i>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Currency'">
+                                  <span class="p-table-data">{{data[col.field] | currency: col.currencyFormat }}</span>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'Action'">
+                                  <button pButton pRipple [icon]="(col.icon ? 'pi ' +col.icon :'')" [label]="col.label"
+                                      class="p-button-rounded p-button-text p-button-sm p-table-button" [ngClass]="col.buttonClass"
+                                      (click)="col.action(data)"></button>
+                              </ng-container>
+                              <ng-container *ngIf="col.type == 'ApprovalButton'">
+                                  <!-- Show approve button if condition is met (or no condition and field is false) -->
+                                  <button pButton pRipple *ngIf="(col.condition ? col.condition(data) : !data[col.field]) && !data[col.field]" [icon]="(col.icon ? 'pi ' +col.icon :'')" [label]="col.label"
+                                      class="p-button-rounded p-button-text p-button-sm p-table-button" [ngClass]="col.buttonClass"
+                                      (click)="col.action(data)"></button>
+                                  <!-- Show checkmark if approved -->
+                                  <i class="pi true-icon pi-check-circle" *ngIf="data[col.field]"></i>
+                              </ng-container>
+                               <ng-container *ngIf="col.type == 'Unenroll'">
+                                  <button pButton pRipple type="button" [icon]="(col.icon ? 'pi pi-calendar' :'')"
+                                      class="p-button-rounded p-button-text p-button-sm" [ngClass]="col.buttonClass"
+                                      (click)="col.action(data)"></button>
+                              </ng-container>
+                            </ng-template>
+                        </ng-container>
+                    </td>
+                </ng-container>
+                <!-- Mobile Edit And Trash Buttons -->
+                <td class="p-text-center p-mobile-table-button" *ngIf="hasEditButton || hasDeleteButton">
+                    <button pButton class="p-button-raised p-mobile-table-button" [icon]="customEditIcon ? customEditIcon : 'pi pi-pencil'" (click)="onEditClicked.emit(data)"
+                            [label]="editButtonLabel" [pTooltip]="editButtonLabel" tooltipPosition="bottom" *ngIf="hasEditButton"></button>
+                    <button pButton class="p-button-raised p-button-danger p-mobile-table-button" icon="pi pi-trash"
+                        [disabled]="disableDeleteCondition ? disableDeleteCondition(data) : false" (click)="onDeleteClicked.emit(data)"
+                        [label]="deleteButtonLabel" [pTooltip]="deleteButtonLabel" tooltipPosition="bottom"
+                        *ngIf="hasDeleteButton"></button>
+                </td>
+                <!-- Desktop Edit And Delete Buttons -->
+                <td class="p-text-center p-desktop-table-button" *ngIf="hasEditButton">
+                    <button pButton pRipple [icon]="customEditIcon ? customEditIcon : 'pi pi-pencil'"
+                            class="p-button-rounded p-button-text p-button-sm p-table-button p-edit-button" [ngClass]="tableButtonClass"
+                        (click)="onEditClicked.emit(data)"></button>
+                </td>
+                <td class="p-text-center p-desktop-table-button" *ngIf="hasDeleteButton">
+                    <button pButton pRipple icon="pi pi-trash"
+                        class="p-button-rounded p-button-text p-button-sm p-table-button p-delete-button" [ngClass]="tableButtonClass"
+                        [disabled]="disableDeleteCondition ? disableDeleteCondition(data) : false"
+                        (click)="onDeleteClicked.emit(data)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

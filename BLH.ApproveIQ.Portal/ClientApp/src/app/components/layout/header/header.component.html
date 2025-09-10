@@ -1,0 +1,11 @@
+<nav class="d-print-none">
+  <p-menubar [model]="(items | async) ?? []"  [style]="{ position: 'relative', backgroundColor: 'rgb(0, 38, 57)',
+    border: 'none', borderRadius: '0', color: '#fff' }" class="spk-navbar">
+    <ng-template pTemplate="start">
+      <a routerLink="/">
+        <img src="assets/logo.png" alt="Logo" class="d-inline-block mr-3"  style="height: 2em;margin-left:20px;">
+      </a>
+      <span class="h2 vertical-align-middle mr-3 cursor-pointer title-text" (click)="goHome()">ApproveIQ</span>
+    </ng-template>
+  </p-menubar>
+</nav>

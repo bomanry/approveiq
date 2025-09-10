@@ -1,0 +1,24 @@
+<div class="field">
+    <label [for]="name" class="block">{{label}} <span *ngIf="control.hasValidator(Validators.required)"
+            class="required-asterisk">*</span></label>
+
+    <p-inputNumber [inputId]="inputId" [id]="name" [name]="name"
+                   [formControl]="control" [attr.aria-describedby]="name+'-help'"
+                   [min]="min" [max]="max" [showButtons]="showButtons" [mode]="mode" [maxFractionDigits]="maxFractionDigits"
+    ></p-inputNumber>
+
+    <ng-container *ngIf="control.touched || control.dirty">
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control?.errors?.required">
+            {{label}} is required.
+        </small>
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control?.errors?.email">
+            {{label}} is not valid.
+        </small>
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control?.errors?.pattern">
+            {{label}} is not valid.
+        </small>
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control?.errors?.min">
+          {{label}}'s value [{{ control.errors?.min.actual }}] is less than the minimum [{{control.errors?.min.min}}];
+        </small>
+    </ng-container>
+</div>

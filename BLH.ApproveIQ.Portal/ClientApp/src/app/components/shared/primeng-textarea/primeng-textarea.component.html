@@ -1,0 +1,19 @@
+<div class="field">
+    <label [for]="name" class="block" [class.disabled-label]="disabled">{{label}} <span *ngIf="control.hasValidator(Validators.required)"
+            class="required-asterisk" [class.disabled-label]="disabled">*</span></label>
+    <textarea [id]="name" [name]="name" [formControl]="control" [attr.aria-describedby]="name+'-help'"
+              [rows]="rows" [autoResize]="false" pInputTextarea>
+    </textarea>
+
+    <ng-container *ngIf="control.touched || control.dirty">
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control?.errors?.required">
+            {{label}} is required.
+        </small>
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control?.errors?.email">
+            {{label}} is not valid.
+        </small>
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control?.errors?.pattern">
+            {{label}} is not valid.
+        </small>
+    </ng-container>
+</div>

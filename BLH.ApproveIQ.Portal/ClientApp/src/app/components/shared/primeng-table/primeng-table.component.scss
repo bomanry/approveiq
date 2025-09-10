@@ -1,0 +1,14 @@
+.text-overflow {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.link-table-data {
+  text-decoration: underline;
+  color: var(--primary-color)
+}
+
+.link-table-data:hover {
+  color: var(--maroon);
+  cursor: pointer;
+}

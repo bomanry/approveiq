@@ -1,0 +1,12 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Unsaved Changes</h5>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to leave the page without saving your changes?</p>
+    </div>
+    <div class="modal-footer">
+        <button label="Stay" type="button" class="p-button-danger" (click)="close(false)" pButton icon="pi pi-times"></button>
+        <button label="Discard Changes" class="ml-3 p-button-success" type="button" (click)="close(true)" pButton icon="pi pi-check"></button>
+    </div>
+</div>

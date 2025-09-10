@@ -1,0 +1,28 @@
+<div class="login-container">
+  <p-card class="login-card">
+    <ng-template pTemplate="header">
+      <h2 class="login-title">Login</h2>
+    </ng-template>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+      <primeng-input 
+        name="email"
+        label="Email"
+        type="email"
+        [control]="emailControl">
+      </primeng-input>
+      
+      <div *ngIf="loginError" class="error-message">
+        {{ loginError }}
+      </div>
+      
+      <p-button 
+        type="submit" 
+        [label]="isLoading ? 'Logging in...' : 'Login'"
+        [disabled]="loginForm.invalid || isLoading"
+        [loading]="isLoading"
+        styleClass="w-100 login-button">
+      </p-button>
+    </form>
+  </p-card>
+</div>

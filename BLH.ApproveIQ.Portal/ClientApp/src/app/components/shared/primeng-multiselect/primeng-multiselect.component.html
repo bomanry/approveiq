@@ -1,0 +1,19 @@
+<div class="field">
+    <label [for]="name" class="block" [class.disabled-label]="disabled">
+        {{label}} <span *ngIf="control.hasValidator(Validators.required)" class="required-asterisk">*</span>
+    </label>
+
+    <p-multiSelect *ngIf="!isStringArray(options)" [id]="name" [name]="name" [options]="options" [formControl]="control" [placeholder]="placeholder" [showClear]="showClear"
+        [attr.aria-describedby]="name+'-help'" [optionLabel]="optionLabel" [optionValue]="optionValue" [filter]="filter" [filterBy]="filterBy">
+    </p-multiSelect>
+
+    <p-multiSelect *ngIf="isStringArray(options)" [id]="name" [name]="name" [options]="options" [formControl]="control" [placeholder]="placeholder" [showClear]="showClear"
+                [attr.aria-describedby]="name+'-help'">
+    </p-multiSelect>
+
+    <ng-container *ngIf="control.touched || control.dirty">
+        <small [id]="name+'-help'" class="p-error block" *ngIf="control.errors?.required">
+            {{label}} is required.
+        </small>
+    </ng-container>
+</div>

@@ -1,0 +1,22 @@
+::ng-deep .p-card {
+  transition: transform 0.2s;
+  height: 100%;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+}
+
+.card-header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card-icon {
+  font-size: 2rem;
+  color: white;
+}

@@ -1,0 +1,23 @@
+a > * {
+  text-decoration: none;
+  color: black;
+}
+
+.title-text {
+  font-family: "Roboto Slab", serif;
+}
+
+.district-selector {
+  line-height: 3 !important;
+  padding: 0.25rem 0.5rem;
+}
+
+.district-selector-mobile {
+  line-height: 2 !important;
+  padding: 0.25rem 0.5rem;
+}
+
+.district-selector:hover {
+  opacity: 0.8;
+}
+

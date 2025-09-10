@@ -1,0 +1,42 @@
+import { AuditableEntity } from '../../../b-l-h/primitives/auditable-entity';
+import { InvoiceItem } from './invoice-item';
+
+export class Invoice extends AuditableEntity {
+    apInvoiceType: string;
+    invoiceStatus: string;
+    legacyOrderNumber: string;
+    buJobNumber: string;
+    orderType: string;
+    category: string;
+    company: string;
+    jdeOrderNumber: string;
+    vendorId: string;
+    vendorName: string;
+    vendorType: string;
+    vendorStreetAddress: string;
+    vendorCity: string;
+    vendorState: string;
+    vendorZip: string;
+    glDate = new Date();
+    invoiceDate = new Date();
+    receivedDate = new Date();
+    netAmount?: number;
+    miscAmount?: number;
+    freightAmount?: number;
+    grossAmount?: number;
+    paymentTerms: string;
+    taxableAmount?: number;
+    taxExCode: string;
+    taxArea: string;
+    taxAmount?: number;
+    retainagePct?: number;
+    retainageAmount?: number;
+    amountToPay?: number;
+    currency: string;
+    paymentHoldFlag?: boolean;
+    invoiceDescription: string;
+    voucherNumber: string;
+    checkNumber: string;
+    checkDate = new Date();
+    lines = new Array<InvoiceItem>();
+}
