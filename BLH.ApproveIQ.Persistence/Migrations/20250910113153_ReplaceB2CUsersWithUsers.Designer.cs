@@ -4,6 +4,7 @@ using BLH.ApproveIQ.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BLH.ApproveIQ.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250910113153_ReplaceB2CUsersWithUsers")]
+    partial class ReplaceB2CUsersWithUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,9 +144,6 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<Guid?>("CurrentlyAssignedToUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal?>("FreightAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -200,9 +200,6 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                     b.Property<string>("PaymentTerms")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ReceivedDate")
                         .HasColumnType("datetime2");
@@ -261,80 +258,7 @@ namespace BLH.ApproveIQ.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BuJobNumber");
-
-                    b.HasIndex("CurrentlyAssignedToUserId");
-
-                    b.HasIndex("InvoiceDate");
-
-                    b.HasIndex("InvoiceStatus");
-
-                    b.HasIndex("ProjectId");
-
                     b.ToTable("Invoices", (string)null);
-                });
-
-            modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.InvoiceApproval", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Comments")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FromStatus")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("FromUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InvoiceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ToStatus")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("ToUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FromUserId");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.HasIndex("ToUserId");
-
-                    b.ToTable("InvoiceApprovals", (string)null);
                 });
 
             modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.InvoiceItem", b =>
@@ -424,48 +348,6 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                     b.ToTable("InvoiceItems", (string)null);
                 });
 
-            modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.Project", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("BuJobNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BuJobNumber")
-                        .IsUnique();
-
-                    b.ToTable("Projects", (string)null);
-                });
-
             modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -529,51 +411,6 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.UserProject", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ProjectRole")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserId", "ProjectId")
-                        .IsUnique();
-
-                    b.ToTable("UserProjects", (string)null);
-                });
-
             modelBuilder.Entity("BLH.ApproveIQ.Persistence.Outbox.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -615,50 +452,6 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                     b.ToTable("OutboxMessageConsumers", (string)null);
                 });
 
-            modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.Invoice", b =>
-                {
-                    b.HasOne("BLH.ApproveIQ.Domain.Entities.User", "CurrentlyAssignedToUser")
-                        .WithMany()
-                        .HasForeignKey("CurrentlyAssignedToUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("BLH.ApproveIQ.Domain.Entities.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CurrentlyAssignedToUser");
-
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.InvoiceApproval", b =>
-                {
-                    b.HasOne("BLH.ApproveIQ.Domain.Entities.User", "FromUser")
-                        .WithMany()
-                        .HasForeignKey("FromUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BLH.ApproveIQ.Domain.Entities.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BLH.ApproveIQ.Domain.Entities.User", "ToUser")
-                        .WithMany()
-                        .HasForeignKey("ToUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FromUser");
-
-                    b.Navigation("Invoice");
-
-                    b.Navigation("ToUser");
-                });
-
             modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.InvoiceItem", b =>
                 {
                     b.HasOne("BLH.ApproveIQ.Domain.Entities.Invoice", "Invoice")
@@ -668,25 +461,6 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Invoice");
-                });
-
-            modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.UserProject", b =>
-                {
-                    b.HasOne("BLH.ApproveIQ.Domain.Entities.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BLH.ApproveIQ.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BLH.ApproveIQ.Domain.Entities.Invoice", b =>

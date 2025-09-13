@@ -5,10 +5,10 @@ namespace BLH.ApproveIQ.Presentation.Utilities;
 public class DataExporter<T> where T : class
 {
     // Export to CSV
-    public string ExportToCsv(List<T> data) 
+    public string ExportToCsv(List<T> data)
     {
         var properties = typeof(T).GetProperties();
-        
+
         var csvBuilder = new StringBuilder();
 
         // Add headers

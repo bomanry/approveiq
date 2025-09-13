@@ -16,10 +16,10 @@ public class MigraDocPdfGenerator : IPdfGenerator
         var document = new Document();
 
         GlobalFontSettings.FontResolver = new FailsafeFontResolver();
-        
+
         var style = document.Styles[StyleNames.Normal]!;
         style.Font.Name = "Arial";
-        
+
         return document;
     }
 
@@ -40,10 +40,10 @@ public class MigraDocPdfGenerator : IPdfGenerator
                 }
             }
         };
-        
+
         // Render the PDF
         pdfRenderer.RenderDocument();
-        
+
         using var stream = new MemoryStream();
         pdfRenderer.Save(stream, false);
         return stream.ToArray();

@@ -26,7 +26,7 @@ public class Program
             .Where(x => x.Namespace == "BLH.ApproveIQ.Domain.Entities"
                 || x.Namespace == "BLH.ApproveIQ.Domain.Models")
             .ToList();
-        
+
         var moreModels = BLH.ApproveIQ.Application.AssemblyReference.Assembly.ExportedTypes
             .Where(x => x.Namespace == "BLH.ApproveIQ.Application.Requests"
                         || x.Namespace == "BLH.ApproveIQ.Application.Responses")
@@ -56,9 +56,9 @@ public class Program
                     options.AddNamespaceReplaceRule(nameof(BLH.ApproveIQ.Application), string.Empty);
                     options.AddNamespaceReplaceRule(nameof(System), string.Empty);
                     options.AddNamespaceReplaceRule(nameof(BLH.ApproveIQ.Domain), string.Empty);
-                    
+
                     options.AddNamespaceReplaceRule(nameof(BLH.ApproveIQ.Application.DTOs), "dtos");
-                    
+
                     options.CleanDestinationDirectories.AddRange(new[] { "data" });
                 })
                 .Execute();

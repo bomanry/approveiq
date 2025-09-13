@@ -12,7 +12,7 @@ internal sealed class ExceptionLogConfiguration : IEntityTypeConfiguration<Excep
         builder.ToTable(TableNames.ExceptionLogs);
 
         builder.HasKey(x => x.Id);
-        
+
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

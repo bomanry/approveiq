@@ -10,7 +10,7 @@ public abstract class Entity : IEquatable<Entity>
     { }
 
     public Guid Id { get; private init; }
-    
+
     public bool IsActive { get; set; } = true;
     public bool IsDeleted { get; set; } = false;
 

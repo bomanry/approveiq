@@ -18,7 +18,7 @@ public sealed class UpdateAuditableEntitiesInterceptor
     {
         _currentUserService = currentUserService;
     }
-    
+
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -33,17 +33,17 @@ public sealed class UpdateAuditableEntitiesInterceptor
                 result,
                 cancellationToken);
         }
-        if(_currentUserService.UserExists)
+        if (_currentUserService.UserExists)
         {
             OnBeforeSaveChanges(_currentUserService.UserId!.Value, dbContext);
         }
-        
-        IEnumerable <EntityEntry<AuditableEntity>> entries =
+
+        IEnumerable<EntityEntry<AuditableEntity>> entries =
             dbContext
                 .ChangeTracker
                 .Entries<AuditableEntity>();
-     
-       foreach (EntityEntry<AuditableEntity> entityEntry in entries)
+
+        foreach (EntityEntry<AuditableEntity> entityEntry in entries)
         {
             if (entityEntry.State == EntityState.Added)
             {
@@ -72,9 +72,9 @@ public sealed class UpdateAuditableEntitiesInterceptor
           dbContext
               .ChangeTracker
               .Entries<AuditableEntity>();
-        
+
         var auditEntries = new List<AuditLogEntry>();
-        
+
         foreach (var entry in entries)
         {
             if (entry.Entity is AuditLog || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)

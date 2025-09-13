@@ -18,7 +18,7 @@ public sealed class UsersController : ApiController
     {
         var query = new ValidateUserByEmailQuery(request.Email);
         var result = await Sender.Send(query, cancellationToken);
-        
+
         if (result.IsFailure)
         {
             return HandleFailure(result);

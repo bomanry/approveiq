@@ -18,18 +18,18 @@ namespace BLH.ApproveIQ.Persistence
             // Going up two levels from Persistence project's directory to reach the solution level, then down into API.
             // Modify this path if your settings file is located elsewhere.
             string basePath = Path.Combine(Directory.GetCurrentDirectory(), "../BLH.ApproveIQ.API");
-             if (!Directory.Exists(Path.Combine(basePath)))
-             {
-                 // Fallback if running from a different directory structure, adjust as needed.
-                 // This assumes the command is run from the solution root.
-                 basePath = Path.Combine(Directory.GetCurrentDirectory(), "BLH.ApproveIQ.API");
-             }
-             // If still not found, try relative path from Persistence project output
-             if (!Directory.Exists(Path.Combine(basePath)))
-             {
-                  // Assumes bin/Debug/net8.0 is current dir during design time build
-                 basePath = Path.Combine(Directory.GetCurrentDirectory(), "../../../../BLH.ApproveIQ.API");
-             }
+            if (!Directory.Exists(Path.Combine(basePath)))
+            {
+                // Fallback if running from a different directory structure, adjust as needed.
+                // This assumes the command is run from the solution root.
+                basePath = Path.Combine(Directory.GetCurrentDirectory(), "BLH.ApproveIQ.API");
+            }
+            // If still not found, try relative path from Persistence project output
+            if (!Directory.Exists(Path.Combine(basePath)))
+            {
+                // Assumes bin/Debug/net8.0 is current dir during design time build
+                basePath = Path.Combine(Directory.GetCurrentDirectory(), "../../../../BLH.ApproveIQ.API");
+            }
 
 
             IConfigurationRoot configuration = new ConfigurationBuilder()

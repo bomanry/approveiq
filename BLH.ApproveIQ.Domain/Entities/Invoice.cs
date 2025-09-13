@@ -12,6 +12,14 @@ public class Invoice : AuditableEntity
     public string? OrderType { get; set; }               // "Order Type"
     public string? Category { get; set; }                // "Category"
 
+    // --- Project Relationship ---
+    public Guid? ProjectId { get; set; }                 // Foreign key to Project
+    public Project? Project { get; set; }                // Navigation property
+
+    // --- Current Assignment ---
+    public Guid? CurrentlyAssignedToUserId { get; set; } // Who is responsible now
+    public User? CurrentlyAssignedToUser { get; set; }   // Navigation property
+
     // Company / JDE (left top area)
     public string? Company { get; set; }                 // "Company"
     public string? JdeOrderNumber { get; set; }          // "JDE Order Number"

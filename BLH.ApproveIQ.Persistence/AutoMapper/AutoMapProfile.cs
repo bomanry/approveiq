@@ -6,6 +6,6 @@ public class AutoMapProfile : Profile
 {
     public AutoMapProfile()
     {
-       
+
     }
 }

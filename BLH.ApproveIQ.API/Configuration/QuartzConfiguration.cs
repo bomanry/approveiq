@@ -11,8 +11,8 @@ public static class QuartzConfiguration
         {
             var processOutboxMessagesJobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
             var syncUsersWithEntraJobKey = new JobKey(nameof(SyncUsersWithEntraJob));
-            
-         
+
+
             configure
                 .AddJob<ProcessOutboxMessagesJob>(processOutboxMessagesJobKey)
                 .AddTrigger(
@@ -22,7 +22,7 @@ public static class QuartzConfiguration
                                 schedule =>
                                     schedule.WithIntervalInSeconds(10)
                                         .RepeatForever()));
-            
+
             configure
                 .AddJob<SyncUsersWithEntraJob>(syncUsersWithEntraJobKey)
                 .AddTrigger(
@@ -32,7 +32,7 @@ public static class QuartzConfiguration
                                 schedule =>
                                     schedule.WithIntervalInMinutes(1)
                                         .RepeatForever()));
-            
+
             configure.UseMicrosoftDependencyInjectionJobFactory();
         });
 

@@ -17,7 +17,7 @@ internal sealed class ACSEmailService : EmailService
     {
         _configuration = configuration;
     }
-        
+
     // public override async Task SendIncompleteSessionReminderEmailAsync(string email, List<Session> Sessions, Guid TutorId, string TutorName, CancellationToken cancellationToken = default)
     // {
     //     var template = PastDueSessionResultsReminderEmailTemplate.GetTemplate(Sessions, TutorId, TutorName);

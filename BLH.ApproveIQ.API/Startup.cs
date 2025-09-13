@@ -34,29 +34,29 @@ namespace BLH.ApproveIQ.API
                         .AsImplementedInterfaces()
                         .WithScopedLifetime()
                 );
-            
+
             services.ConfigureAuth(Configuration);
-            
+
             services.ConfigureControllers();
-            
+
             services.ConfigureSwagger();
-            
+
             services.ConfigureMediatR();
-            
+
             services.ConfigureFluentValidation();
-            
+
             services.ConfigureDatabase(Configuration);
-            
+
             //services.ConfigureQuartz();
-            
+
             services.AddEndpointsApiExplorer();
 
             services.AddCors();
 
             services.AddHttpContextAccessor();
-            
+
             services.AddTransient<ICurrentUserService, CurrentUserService>();
-            
+
             // services.AddAuthorization(options =>
             // {
             //     options.AddPolicy(Policies.AdminOnlyPolicy, policy =>
@@ -79,9 +79,9 @@ namespace BLH.ApproveIQ.API
             //         policy.RequireClaim(ApplicationIdentityConstants.AssignedTutorIdClaimType);
             //     });
             // });
-            
+
             services.AddAutoMapper(Persistence.AssemblyReference.Assembly);
-            
+
             // services.AddOptions<AzureOptions>()
             //     .Configure<IConfiguration>((settings, configuration) =>
             //     {
@@ -97,12 +97,12 @@ namespace BLH.ApproveIQ.API
                 })
                 .ValidateDataAnnotations();
             services.AddSingleton(sp => sp.GetRequiredService<IOptions<ResourceFileOptions>>().Value);
-            
+
             // services.ConfigureGraph();
             //
             // services.ConfigureAzureBlob(Configuration);
             //     
-            // services.AddScoped<IClaimsTransformation, B2CRolesClaimsTransformation>();
+            // services.AddScoped<IClaimsTransformation, UserRolesClaimsTransformation>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,7 +117,7 @@ namespace BLH.ApproveIQ.API
             {
                 app.UseHsts();
             }
-            
+
             app.UseSwagger(c =>
             {
                 c.RouteTemplate = "api-docs/{documentName}/swagger.json";
@@ -127,20 +127,20 @@ namespace BLH.ApproveIQ.API
                 c.SwaggerEndpoint("/api-docs/v1/swagger.json", "BLH ApproveIQ API v1");
                 c.RoutePrefix = "";
             });
-            
+
             //app.EnsureDbIsMigrated().Wait();
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
             //app.UseAuthentication();
             //app.UseAuthorization();
-            
+
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

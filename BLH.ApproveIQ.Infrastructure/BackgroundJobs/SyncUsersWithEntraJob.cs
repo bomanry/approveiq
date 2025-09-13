@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
-using NPOI.SS.Formula.Functions;
 using Quartz;
 using BLH.ApproveIQ.Domain.Entities;
 using BLH.ApproveIQ.Persistence;
+using User = BLH.ApproveIQ.Domain.Entities.User;
 
 namespace BLH.ApproveIQ.Infrastructure.BackgroundJobs;
 
@@ -27,19 +27,19 @@ public class SyncUsersWithEntraJob : IJob
     {
         // var allUsersFromGraph = await LoadUserDataFromGraph(_graphServiceClient);
         //
-        // var b2cUserList = _dbContext.Set<B2CUser>().ToList();
+        // var userList = _dbContext.Set<User>().ToList();
         //
-        // for (var i = b2cUserList.Count - 1; i >= 0; i--)
+        // for (var i = userList.Count - 1; i >= 0; i--)
         // {
-        //     var b2cUser = b2cUserList[i];
+        //     var user = userList[i];
         //
-        //     var userFromGraph = allUsersFromGraph.SingleOrDefault(x => x.Id == b2cUser.Id.ToString());
+        //     var userFromGraph = allUsersFromGraph.SingleOrDefault(x => x.Id == user.Id.ToString());
         //
         //     if (userFromGraph == null)
-        //         b2cUserList.RemoveAt(i);
+        //         userList.RemoveAt(i);
         //     else
         //     {
-        //         _mapper.Map(userFromGraph, b2cUser);
+        //         _mapper.Map(userFromGraph, user);
         //
         //         if (userFromGraph.Identities != null)
         //         {
@@ -48,7 +48,7 @@ public class SyncUsersWithEntraJob : IJob
         //
         //             if (emailAddressIdentity != null)
         //             {
-        //                 b2cUser.UserPrincipalName = emailAddressIdentity.IssuerAssignedId;
+        //                 user.UserPrincipalName = emailAddressIdentity.IssuerAssignedId;
         //             }
         //         }
         //
@@ -56,21 +56,21 @@ public class SyncUsersWithEntraJob : IJob
         //     }
         // }
         //
-        // b2cUserList.AddRange(allUsersFromGraph.Select(m => _mapper.Map<B2CUser>(m)));
+        // userList.AddRange(allUsersFromGraph.Select(m => _mapper.Map<User>(m)));
         //
-        // SyncUsers(_dbContext, b2cUserList);
+        // SyncUsers(_dbContext, userList);
     }
-    
-    private class B2CComparer : IEqualityComparer<B2CUser>
+
+    private class UserComparer : IEqualityComparer<User>
     {
-        public bool Equals(B2CUser x, B2CUser y)
+        public bool Equals(User x, User y)
         {
             ArgumentNullException.ThrowIfNull(x);
             ArgumentNullException.ThrowIfNull(y);
             return x.Id == y.Id;
         }
 
-        public int GetHashCode(B2CUser obj)
+        public int GetHashCode(User obj)
         {
             ArgumentNullException.ThrowIfNull(obj);
             ArgumentNullException.ThrowIfNull(obj.Id);

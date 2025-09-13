@@ -57,10 +57,27 @@ internal sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(x => x.VoucherNumber).HasMaxLength(50);
         builder.Property(x => x.CheckNumber).HasMaxLength(50);
 
+        // Foreign key relationships
+        builder.HasOne(x => x.Project)
+            .WithMany()
+            .HasForeignKey(x => x.ProjectId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(x => x.CurrentlyAssignedToUser)
+            .WithMany()
+            .HasForeignKey(x => x.CurrentlyAssignedToUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         // Navigation properties
         builder.HasMany(x => x.Lines)
             .WithOne(x => x.Invoice)
-            .HasForeignKey(x => x.InvoiceId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(x => x.InvoiceId);
+
+        // Indexes for performance
+        builder.HasIndex(x => x.BuJobNumber); // For linking to Project.ReferenceId
+        builder.HasIndex(x => x.ProjectId);
+        builder.HasIndex(x => x.CurrentlyAssignedToUserId);
+        builder.HasIndex(x => x.InvoiceStatus);
+        builder.HasIndex(x => x.InvoiceDate);
     }
 }

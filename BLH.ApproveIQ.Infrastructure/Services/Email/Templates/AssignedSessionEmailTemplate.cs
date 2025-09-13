@@ -35,8 +35,8 @@ public static class AssignedSessionEmailTemplate
                                                 $"</td>" +
                                             $"</tr>" +
                                         $"</table>" +
-        
-        
+
+
                                         $"<h1 style='color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;'>" +
                                             $"Tutor Id:  {EmailTemplateConstants.TUTOR_ID_REPLACE_TOKEN}" +
                                         $"</h1>" +
@@ -44,7 +44,7 @@ public static class AssignedSessionEmailTemplate
                                         $"<p style='color:#455056; font-size:15px;line-height:24px; margin:0; margin-bottom: 25px;'>" +
                                             $"Session Id: {EmailTemplateConstants.SESSION_ID_REPLACE_TOKEN}" +
                                         $"</p>" +
-        
+
                                         $"<div>" +
                                         $"</div>" +
                                     $"</td>" +
@@ -65,7 +65,7 @@ public static class AssignedSessionEmailTemplate
         $"</html>";
 
 
-    
+
     public static string GetTemplate(List<Guid> SessionIds, Guid TutorId)
     {
         var template = ASSIGNED_SESSION_TEMPLATE;
@@ -74,8 +74,8 @@ public static class AssignedSessionEmailTemplate
         return template;
     }
 }
-    
-    
+
+
 
 // public static class ForgotPasswordEmailTemplate
 // {

@@ -1,4 +1,6 @@
 import { AuditableEntity } from '../../../b-l-h/primitives/auditable-entity';
+import { Project } from './project';
+import { User } from './user';
 import { InvoiceItem } from './invoice-item';
 
 export class Invoice extends AuditableEntity {
@@ -8,6 +10,10 @@ export class Invoice extends AuditableEntity {
     buJobNumber: string;
     orderType: string;
     category: string;
+    projectId?: string;
+    project = new Project();
+    currentlyAssignedToUserId?: string;
+    currentlyAssignedToUser = new User();
     company: string;
     jdeOrderNumber: string;
     vendorId: string;

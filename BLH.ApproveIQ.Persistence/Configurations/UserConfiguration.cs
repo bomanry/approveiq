@@ -23,8 +23,20 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.DisplayName)
+            .HasMaxLength(200)
+            .IsRequired(false);
+
         builder.Property(x => x.Email)
             .HasMaxLength(255)
+            .IsRequired();
+
+        builder.Property(x => x.UserPrincipalName)
+            .HasMaxLength(255)
+            .IsRequired(false);
+
+        builder.Property(x => x.Role)
+            .HasMaxLength(50)
             .IsRequired();
 
         builder.HasIndex(x => x.Email)

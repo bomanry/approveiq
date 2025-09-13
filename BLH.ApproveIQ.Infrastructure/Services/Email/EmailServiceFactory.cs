@@ -25,7 +25,7 @@ internal sealed class EmailServiceFactory : IEmailServiceFactory
         var sendGridEmailConfig = _configuration
             .GetSection("SendGridEmailConfiguration")
             .Get<SendGridEmailConfiguration>();
-        
+
         var acsEmailConfig = _configuration
             .GetSection("ACSEmailConfiguration")
             .Get<ACSEmailConfiguration>();
