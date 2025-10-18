@@ -7,5 +7,16 @@
       </a>
       <span class="h2 vertical-align-middle mr-3 cursor-pointer title-text" (click)="goHome()">ApproveIQ</span>
     </ng-template>
+    <ng-template pTemplate="end">
+      <div *ngIf="logoutItem | async as logout" class="flex align-items-center">
+        <button pButton type="button" 
+                [icon]="logout.icon || ''" 
+                [label]="logout.label || ''"
+                (click)="logout.command && logout.command()"
+                class="p-button-text p-button-plain"
+                style="color: white;">
+        </button>
+      </div>
+    </ng-template>
   </p-menubar>
 </nav>

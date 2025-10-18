@@ -58,7 +58,7 @@ internal sealed class InvoiceApprovalConfiguration : IEntityTypeConfiguration<In
 
         // Index for querying approvals by invoice
         builder.HasIndex(x => x.InvoiceId);
-
+        
         // Index for querying pending items for a user
         builder.HasIndex(x => x.ToUserId);
     }

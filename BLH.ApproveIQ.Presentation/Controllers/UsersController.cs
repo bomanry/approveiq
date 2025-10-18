@@ -13,6 +13,20 @@ public sealed class UsersController : ApiController
     {
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
+    {
+        var query = new GetAllUsersQuery();
+        var result = await Sender.Send(query, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return HandleFailure(result);
+        }
+
+        return Ok(result.Value);
+    }
+
     [HttpPost("validate")]
     public async Task<IActionResult> ValidateUser([FromBody] ValidateUserRequest request, CancellationToken cancellationToken)
     {

@@ -1,0 +1,338 @@
+.invoice-detail-container {
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.invoice-header {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #374151;
+}
+
+/* Tab styling */
+::ng-deep .p-tabview {
+  .p-tabview-nav {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .p-tabview-nav li {
+    margin-right: 0;
+  }
+
+  .p-tabview-nav li .p-tabview-nav-link {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #e9ecef;
+      color: #495057;
+    }
+  }
+
+  .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: white;
+    color: #007bff;
+    border-bottom-color: #007bff;
+  }
+
+  .p-tabview-panels {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-top: none;
+    padding: 2rem;
+  }
+}
+
+/* Table styling */
+::ng-deep .p-datatable {
+  .p-datatable-header {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 1rem;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: #007bff;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem;
+    border: 1px solid #0056b3;
+  }
+
+  .p-datatable-tbody > tr > td {
+    padding: 0.75rem;
+    border: 1px solid #e9ecef;
+  }
+
+  .p-datatable-tbody > tr:nth-child(even) {
+    background: #f8f9fa;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: #e3f2fd;
+  }
+}
+
+/* Dialog styling */
+::ng-deep .p-dialog {
+  .p-dialog-header {
+    background: #007bff;
+    color: white;
+    border-bottom: none;
+  }
+
+  .p-dialog-content {
+    padding: 2rem;
+  }
+
+  .p-dialog-footer {
+    padding: 1rem 2rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+  }
+}
+
+/* Button styling */
+::ng-deep .p-button {
+  &.p-button-secondary {
+    background: #6c757d;
+    border-color: #6c757d;
+
+    &:hover {
+      background: #5a6268;
+      border-color: #5a6268;
+    }
+  }
+
+  &.p-button-danger {
+    background: #dc3545;
+    border-color: #dc3545;
+
+    &:hover {
+      background: #c82333;
+      border-color: #bd2130;
+    }
+  }
+}
+
+/* Input styling - Uniform height for all form controls */
+::ng-deep .p-inputtext,
+::ng-deep .p-dropdown,
+::ng-deep .p-calendar input,
+::ng-deep .p-inputnumber input {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 0.75rem;
+  height: 40px; /* Fixed uniform height */
+  font-size: 14px;
+  
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
+
+/* Ensure dropdown trigger has same height */
+::ng-deep .p-dropdown {
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+  
+  .p-dropdown-trigger {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .p-dropdown-label {
+    padding: 0 0.75rem;
+    line-height: 1.4;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+}
+
+/* Calendar input wrapper */
+::ng-deep .p-calendar {
+  .p-inputtext {
+    height: 40px;
+    padding: 0.75rem;
+  }
+  
+  .p-datepicker-trigger {
+    width: 40px;
+    height: 40px;
+    border-left: 1px solid #ced4da;
+  }
+}
+
+/* InputNumber styling */
+::ng-deep .p-inputnumber {
+  .p-inputtext {
+    height: 40px;
+    padding: 0.75rem;
+  }
+  
+  .p-inputnumber-button {
+    width: 40px;
+    height: 20px; /* Half height for up/down buttons */
+  }
+}
+
+/* Required field indicator */
+.field label:has(+ input[required])::after,
+.field label:has(+ p-dropdown[required])::after {
+  content: " *";
+  color: #dc3545;
+}
+
+/* Two-column layout styles */
+.two-column-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.form-column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.form-column .field {
+  margin-bottom: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .invoice-detail-container {
+    padding: 0.5rem;
+  }
+
+  .invoice-header {
+    padding: 1rem;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-panels {
+    padding: 1rem;
+  }
+
+  ::ng-deep .p-dialog {
+    width: 95vw !important;
+    margin: 0.5rem;
+  }
+
+  .form-column {
+    min-width: 100%;
+  }
+}
+
+/* Grid adjustments for better spacing */
+.grid {
+  margin: 0;
+}
+
+.grid > .col-12,
+.grid > [class*="col-"] {
+  padding: 0.5rem;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  &.status-new {
+    background: #cfe2ff;
+    color: #084298;
+  }
+
+  &.status-pending {
+    background: #fff3cd;
+    color: #664d03;
+  }
+
+  &.status-approved {
+    background: #d1e7dd;
+    color: #0f5132;
+  }
+
+  &.status-rejected {
+    background: #f8d7da;
+    color: #842029;
+  }
+}
+
+/* Status Stamp Watermark */
+.status-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5rem;
+  padding: 2rem 4rem;
+  border: 0.5rem solid;
+  border-radius: 1rem;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 10;
+  font-family: 'Arial Black', sans-serif;
+  white-space: nowrap;
+
+  &.status-approved {
+    color: #28a745;
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.05);
+  }
+
+  &.status-rejected {
+    color: #dc3545;
+    border-color: #dc3545;
+    background: rgba(220, 53, 69, 0.05);
+  }
+
+  &.status-received {
+    color: #007bff;
+    border-color: #007bff;
+    background: rgba(0, 123, 255, 0.05);
+  }
+}

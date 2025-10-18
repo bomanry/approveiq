@@ -4,6 +4,7 @@ import { User } from './user';
 import { InvoiceItem } from './invoice-item';
 
 export class Invoice extends AuditableEntity {
+    invoiceNumber: string;
     apInvoiceType: string;
     invoiceStatus: string;
     legacyOrderNumber: string;
@@ -44,5 +45,6 @@ export class Invoice extends AuditableEntity {
     voucherNumber: string;
     checkNumber: string;
     checkDate = new Date();
+    pdfFileName: string;
     lines = new Array<InvoiceItem>();
 }

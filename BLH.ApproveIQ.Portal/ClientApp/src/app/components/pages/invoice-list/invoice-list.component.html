@@ -1,0 +1,89 @@
+<div class="container-fluid mt-4">
+  <edit-header
+    title="Invoice List"
+    [showBackButton]="true">
+  </edit-header>
+
+  <primeng-table
+    [dataList]="invoices"
+    [cols]="cols"
+    [loading]="loading"
+    [totalRecords]="totalRecords"
+    [lazy]="false"
+    [globalFilterFields]="globalFilterFields"
+    [hasSearchBox]="true"
+    [hasClearFilters]="true"
+    [hasAddAction]="false"
+    [hasEditButton]="true"
+    [hasDeleteButton]="false"
+    [hasCsvExport]="false"
+    [actionLinks]="actionLinks"
+    editButtonLabel=""
+    customEditIcon="pi pi-eye"
+    (onLazyLoad)="onLazyLoad($event)"
+    (onEditClicked)="onEditClicked($event)">
+  </primeng-table>
+
+  <!-- Download Options Dialog -->
+  <p-dialog
+    header="Download Options"
+    [(visible)]="displayDownloadDialog"
+    [modal]="true"
+    [style]="{width: '500px'}"
+    [draggable]="false"
+    [resizable]="false">
+
+    <p class="mb-4">
+      You are about to download the selected invoice details. Please choose a format below and whether to include the PDF invoices.
+    </p>
+
+    <div class="field mb-4">
+      <label class="font-semibold mb-2 block">File Format</label>
+      <div class="flex flex-column gap-3">
+        <div class="flex align-items-center">
+          <p-radioButton
+            name="downloadFormat"
+            value="csv"
+            [(ngModel)]="downloadFormat"
+            inputId="formatCsv">
+          </p-radioButton>
+          <label for="formatCsv" class="ml-2">CSV (Comma-Separated Values)</label>
+        </div>
+        <div class="flex align-items-center">
+          <p-radioButton
+            name="downloadFormat"
+            value="excel"
+            [(ngModel)]="downloadFormat"
+            inputId="formatExcel">
+          </p-radioButton>
+          <label for="formatExcel" class="ml-2">Excel (.xlsx)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="flex align-items-center">
+        <p-checkbox
+          [(ngModel)]="includePdf"
+          [binary]="true"
+          inputId="includePdf">
+        </p-checkbox>
+        <label for="includePdf" class="ml-2">Include PDF Invoices</label>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        severity="secondary"
+        (onClick)="displayDownloadDialog = false">
+      </p-button>
+      <p-button
+        label="Download"
+        icon="pi pi-download"
+        (onClick)="performDownload()">
+      </p-button>
+    </ng-template>
+  </p-dialog>
+</div>

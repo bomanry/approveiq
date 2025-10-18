@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
-import { AuthService } from '../../../framework/services/auth.service';
+import { AuthService, LoginResponse } from '../../../framework/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +21,8 @@ export class LoginComponent {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) {
     this.emailControl = new FormControl('bo.manry@sparkhound.com', [Validators.required, Validators.email]);
     this.loginForm = this.formBuilder.group({
@@ -28,36 +31,36 @@ export class LoginComponent {
   }
 
   onLogin(): void {
-    console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.loginError = null;
       const email = this.loginForm.value.email;
-      console.log(email);
-      this.userService.validateUser(email).subscribe({
+
+      const loginRequest = { email };
+
+      this.http.post<LoginResponse>(`${environment.baseUrl}/auth/login`, loginRequest).subscribe({
         next: (response) => {
           this.isLoading = false;
-          if (response.isValid && response.user) {
-            console.log('Login successful for user:', response.user);
-            // Use auth service to set login state
-            this.authService.login(response.user);
-            this.router.navigate(['/home']);
-          } else {
-            this.loginError = 'User not found. Please check your email address.';
-          }
+          console.log('Login successful:', response);
+
+          // Use auth service to set login state with JWT token
+          this.authService.login(response);
+          this.router.navigate(['/home']);
         },
         error: (error) => {
           this.isLoading = false;
           console.error('Login error:', error);
-          if (error.status === 404) {
-            this.loginError = 'User not found. Please check your email address.';
+          if (error.status === 401 || error.status === 404) {
+            this.loginError = 'User not found or account disabled. Please check your email address.';
+          } else if (error.status === 400) {
+            this.loginError = 'Invalid email address format.';
           } else {
             this.loginError = 'An error occurred during login. Please try again.';
           }
         }
       });
     } else {
-      console.log('Form is invalid');
+      this.loginError = 'Please enter a valid email address.';
     }
   }
 }

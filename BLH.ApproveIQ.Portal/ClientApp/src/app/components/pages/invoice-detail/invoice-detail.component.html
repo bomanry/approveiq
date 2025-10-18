@@ -1,0 +1,743 @@
+<div class="invoice-detail-container">
+  <edit-header
+    title="Invoice Detail"
+    [showBackButton]="true">
+  </edit-header>
+
+  <!-- Header Section -->
+  <div class="invoice-header">
+    <div class="mb-4">
+      <div class="flex justify-content-between align-items-center mb-3">
+        <div>
+          <p class="text-color-secondary m-0">Invoice #{{ invoice.id }}</p>
+        </div>
+        <div class="flex gap-2">
+          <p-button
+            *ngIf="invoice.pdfFileName && !pdfUrl"
+            label="Show PDF"
+            icon="pi pi-file-pdf"
+            severity="info"
+            (onClick)="showPdf()">
+          </p-button>
+          <p-button
+            label="Save"
+            icon="pi pi-save"
+            [loading]="saving"
+            (onClick)="saveInvoice()"
+            [disabled]="loading">
+          </p-button>
+        </div>
+      </div>
+
+      <form [formGroup]="invoiceInfoForm" class="p-fluid">
+        <div class="grid">
+          <div class="col-4">
+            <div class="field mb-0">
+              <label for="headerBuJobNumber">BU / Job Number</label>
+              <input pInputText id="headerBuJobNumber" formControlName="buJobNumber" />
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="field mb-0">
+              <label for="headerInvoiceStatus">Invoice Status</label>
+              <p-dropdown
+                id="headerInvoiceStatus"
+                formControlName="invoiceStatus"
+                [options]="[
+                  {label: 'New', value: 'New'},
+                  {label: 'Pending Approval', value: 'PendingApproval'},
+                  {label: 'Approved', value: 'Approved'},
+                  {label: 'Rejected', value: 'Rejected'}
+                ]"
+                placeholder="Select Status">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="field mb-0">
+              <label for="headerCurrentlyAssignedToUserId">Current Assigned User</label>
+              <p-dropdown
+                id="headerCurrentlyAssignedToUserId"
+                formControlName="currentlyAssignedToUserId"
+                [options]="userOptions"
+                placeholder="Select User">
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading" class="grid">
+    <!-- Left Column - Form Tabs -->
+    <div [ngClass]="pdfUrl ? 'col-6' : 'col-12'">
+      <p-tabView [(activeIndex)]="activeTab">
+
+      <!-- Vendor Information Tab -->
+      <p-tabPanel *ngIf="invoice.invoiceStatus !== 'Rejected'" header="Vendor Info" leftIcon="pi pi-building">
+        <div class="mb-3">
+          <p-button
+            label="Code Invoice"
+            icon="pi pi-list"
+            (onClick)="activeTab = 1">
+          </p-button>
+        </div>
+
+        <div class="grid">
+          <!-- Left Column -->
+          <div class="col-6">
+            <form [formGroup]="vendorInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="vendorId">Vendor ID *</label>
+                <input pInputText id="vendorId" formControlName="vendorId" />
+              </div>
+              <div class="field">
+                <label for="vendorName">Name *</label>
+                <input pInputText id="vendorName" formControlName="vendorName" />
+              </div>
+            </form>
+            <form [formGroup]="invoiceInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="invoiceNumber">Invoice Number *</label>
+                <input pInputText id="invoiceNumber" formControlName="invoiceNumber" />
+              </div>
+            </form>
+            <form [formGroup]="dateInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="glDate">GL Date</label>
+                <p-calendar
+                  id="glDate"
+                  formControlName="glDate"
+                  dateFormat="mm/dd/yy"
+                  [showIcon]="true">
+                </p-calendar>
+              </div>
+              <div class="field">
+                <label for="invoiceDate">Invoice Date</label>
+                <p-calendar
+                  id="invoiceDate"
+                  formControlName="invoiceDate"
+                  dateFormat="mm/dd/yy"
+                  [showIcon]="true">
+                </p-calendar>
+              </div>
+              <div class="field">
+                <label for="receivedDate">Received Date</label>
+                <p-calendar
+                  id="receivedDate"
+                  formControlName="receivedDate"
+                  dateFormat="mm/dd/yy"
+                  [showIcon]="true">
+                </p-calendar>
+              </div>
+            </form>
+          </div>
+
+          <!-- Right Column -->
+          <div class="col-6">
+            <form [formGroup]="vendorInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="vendorType">Vendor Type</label>
+                <p-dropdown
+                  id="vendorType"
+                  formControlName="vendorType"
+                  [options]="[{label: 'V', value: 'V'}]"
+                  placeholder="Select Type">
+                </p-dropdown>
+              </div>
+              <div class="field">
+                <label for="vendorStreetAddress">Street Address</label>
+                <input pInputText id="vendorStreetAddress" formControlName="vendorStreetAddress" />
+              </div>
+              <div class="field">
+                <label for="vendorCity">City</label>
+                <input pInputText id="vendorCity" formControlName="vendorCity" />
+              </div>
+              <div class="field">
+                <label for="vendorState">State</label>
+                <input pInputText id="vendorState" formControlName="vendorState" />
+              </div>
+              <div class="field">
+                <label for="vendorZip">Zip</label>
+                <input pInputText id="vendorZip" formControlName="vendorZip" />
+              </div>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Invoice Line Items Tab -->
+      <p-tabPanel *ngIf="invoice.invoiceStatus !== 'Rejected'" header="Code Invoice" leftIcon="pi pi-list">
+        <div class="flex justify-content-between align-items-center mb-3">
+          <h3>Invoice Line Items</h3>
+          <p-button
+            label="Add Item"
+            icon="pi pi-plus"
+            (onClick)="showAddItemDialog()">
+          </p-button>
+        </div>
+
+        <!-- Add/Edit Item Form -->
+        <div *ngIf="displayAddItemDialog" class="mb-4">
+          <form [formGroup]="newItemForm" class="p-fluid">
+            <div class="grid">
+              <!-- Row 1 -->
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="businessUnit">Business Unit *</label>
+                  <input pInputText id="businessUnit" formControlName="businessUnit" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="buDescription">BU Description</label>
+                  <input pInputText id="buDescription" formControlName="buDescription" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="costCode">Cost Code *</label>
+                  <input pInputText id="costCode" formControlName="costCode" />
+                </div>
+              </div>
+
+              <!-- Row 2 -->
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="costCodeDesc">Cost Code Description</label>
+                  <input pInputText id="costCodeDesc" formControlName="costCodeDesc" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="costType">Cost Type</label>
+                  <input pInputText id="costType" formControlName="costType" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="costTypeDesc">Cost Type Description</label>
+                  <input pInputText id="costTypeDesc" formControlName="costTypeDesc" />
+                </div>
+              </div>
+
+              <!-- Row 3 -->
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="orderNumber">Order Number</label>
+                  <input pInputText id="orderNumber" formControlName="orderNumber" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="line">Line</label>
+                  <input pInputText id="line" formControlName="line" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="orderSuffix">Order Suffix</label>
+                  <input pInputText id="orderSuffix" formControlName="orderSuffix" />
+                </div>
+              </div>
+
+              <!-- Row 4 -->
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="glLineType">GL Line Type</label>
+                  <input pInputText id="glLineType" formControlName="glLineType" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="uom">UOM</label>
+                  <input pInputText id="uom" formControlName="uom" />
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="qty">Quantity *</label>
+                  <p-inputNumber
+                    id="qty"
+                    formControlName="qty"
+                    [min]="0">
+                  </p-inputNumber>
+                </div>
+              </div>
+
+              <!-- Row 5 -->
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="unitPrice">Unit Price *</label>
+                  <p-inputNumber
+                    id="unitPrice"
+                    formControlName="unitPrice"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+              </div>
+
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'">
+                <div class="field">
+                  <label for="amount">Amount</label>
+                  <p-inputNumber
+                    id="amount"
+                    formControlName="amount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US"
+                    [readonly]="true">
+                  </p-inputNumber>
+                </div>
+              </div>
+
+              <!-- Empty col to maintain grid -->
+              <div [ngClass]="pdfUrl ? 'col-6' : 'col-4'"></div>
+
+              <!-- Action Buttons -->
+              <div class="col-12">
+                <div class="flex gap-2 justify-content-end">
+                  <p-button
+                    label="Cancel"
+                    icon="pi pi-times"
+                    severity="secondary"
+                    (onClick)="displayAddItemDialog = false; editingItemIndex = null">
+                  </p-button>
+                  <p-button
+                    [label]="editingItemIndex !== null ? 'Update Item' : 'Add Item'"
+                    icon="pi pi-check"
+                    (onClick)="addInvoiceItem()"
+                    [disabled]="newItemForm.invalid">
+                  </p-button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="!displayAddItemDialog">
+          <div style="overflow-x: auto;">
+            <p-table [value]="invoice.lines" [responsive]="false" styleClass="p-datatable-striped"
+                     [style]="{'min-width': '1200px'}">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="white-space: nowrap; min-width: 120px;">Business Unit</th>
+                  <th style="white-space: nowrap; min-width: 140px;">BU Description</th>
+                  <th style="white-space: nowrap; min-width: 100px;">Cost Code</th>
+                  <th style="white-space: nowrap; min-width: 140px;">Cost Code Desc</th>
+                  <th style="white-space: nowrap; min-width: 100px;">Cost Type</th>
+                  <th style="white-space: nowrap; min-width: 140px;">Cost Type Desc</th>
+                  <th style="white-space: nowrap; min-width: 120px;">Order Number</th>
+                  <th style="white-space: nowrap; min-width: 60px;">Line</th>
+                  <th style="white-space: nowrap; min-width: 80px;">Order Suf.</th>
+                  <th style="white-space: nowrap; min-width: 120px;">GL Line Type</th>
+                  <th style="white-space: nowrap; min-width: 60px;">QTY</th>
+                  <th style="white-space: nowrap; min-width: 60px;">UOM</th>
+                  <th style="white-space: nowrap; min-width: 100px;">Unit Price</th>
+                  <th style="white-space: nowrap; min-width: 100px;">Amount</th>
+                  <th style="white-space: nowrap; min-width: 80px;">Actions</th>
+                </tr>
+              </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+              <tr>
+                <td>{{ item.businessUnit }}</td>
+                <td>{{ item.buDescription }}</td>
+                <td>{{ item.costCode }}</td>
+                <td>{{ item.costCodeDesc }}</td>
+                <td>{{ item.costType }}</td>
+                <td>{{ item.costTypeDesc }}</td>
+                <td>{{ item.orderNumber }}</td>
+                <td>{{ item.line }}</td>
+                <td>{{ item.orderSuffix }}</td>
+                <td>{{ item.glLineType }}</td>
+                <td>{{ item.qty }}</td>
+                <td>{{ item.uom }}</td>
+                <td>{{ item.unitPrice | currency }}</td>
+                <td>{{ item.amount | currency }}</td>
+                <td>
+                  <div class="flex gap-1">
+                    <p-button
+                      icon="pi pi-pencil"
+                      size="small"
+                      (onClick)="editInvoiceItem(i)">
+                    </p-button>
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      size="small"
+                      styleClass="p-button-danger"
+                      (onClick)="removeInvoiceItem(i)">
+                    </p-button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="15" class="text-center">There are no items to show.</td>
+              </tr>
+            </ng-template>
+            </p-table>
+          </div>
+
+          <!-- Horizontal Line and Totals Section -->
+          <hr class="my-4" />
+          <h3 class="mb-3">Totals</h3>
+
+          <form [formGroup]="amountInfoForm" class="p-fluid">
+            <div class="grid">
+              <!-- Left Column -->
+              <div class="col-6">
+                <div class="field">
+                  <label for="netAmount">Net Amount</label>
+                  <p-inputNumber
+                    id="netAmount"
+                    formControlName="netAmount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+                <div class="field">
+                  <label for="miscAmount">Misc Amount</label>
+                  <p-inputNumber
+                    id="miscAmount"
+                    formControlName="miscAmount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+                <div class="field">
+                  <label for="freightAmount">Freight Amount</label>
+                  <p-inputNumber
+                    id="freightAmount"
+                    formControlName="freightAmount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+                <div class="field">
+                  <label for="grossAmount">Gross Amount</label>
+                  <p-inputNumber
+                    id="grossAmount"
+                    formControlName="grossAmount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+                <div class="field">
+                  <label for="paymentTerms">Payment Terms</label>
+                  <input pInputText id="paymentTerms" formControlName="paymentTerms" placeholder="Net 15 Days" />
+                </div>
+                <div class="field">
+                  <label for="currency">Currency</label>
+                  <p-dropdown
+                    id="currency"
+                    formControlName="currency"
+                    [options]="[{label: 'USD', value: 'USD'}, {label: 'EUR', value: 'EUR'}]"
+                    placeholder="Select Currency">
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <!-- Right Column -->
+              <div class="col-6">
+                <div class="field">
+                  <label for="taxableAmount">Taxable Amount</label>
+                  <p-inputNumber
+                    id="taxableAmount"
+                    formControlName="taxableAmount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+                <div class="field">
+                  <label for="taxExCode">Tax EX</label>
+                  <input pInputText id="taxExCode" formControlName="taxExCode" />
+                </div>
+                <div class="field">
+                  <label for="taxArea">Tax Area</label>
+                  <input pInputText id="taxArea" formControlName="taxArea" />
+                </div>
+                <div class="field">
+                  <label for="taxAmount">Tax Amount</label>
+                  <p-inputNumber
+                    id="taxAmount"
+                    formControlName="taxAmount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+                <div class="field">
+                  <label for="retainagePct">Retainage Pct</label>
+                  <p-inputNumber
+                    id="retainagePct"
+                    formControlName="retainagePct"
+                    mode="decimal"
+                    [maxFractionDigits]="4">
+                  </p-inputNumber>
+                </div>
+                <div class="field">
+                  <label for="retainageAmount">Retainage Amount</label>
+                  <p-inputNumber
+                    id="retainageAmount"
+                    formControlName="retainageAmount"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+              </div>
+
+              <!-- Bottom row for Amount to Pay and Payment Hold Flag -->
+              <div class="col-6">
+                <div class="field">
+                  <label for="amountToPay">Amount to Pay</label>
+                  <p-inputNumber
+                    id="amountToPay"
+                    formControlName="amountToPay"
+                    mode="currency"
+                    currency="USD"
+                    locale="en-US">
+                  </p-inputNumber>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="field">
+                  <label for="paymentHoldFlag">Payment Hold Flag</label>
+                  <p-dropdown
+                    id="paymentHoldFlag"
+                    formControlName="paymentHoldFlag"
+                    [options]="[{label: 'N', value: false}, {label: 'Y', value: true}]"
+                    placeholder="Select">
+                  </p-dropdown>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </p-tabPanel>
+
+      <!-- Accounting Data Tab -->
+      <p-tabPanel header="Accounting Data" leftIcon="pi pi-file">
+        <div class="grid">
+          <div class="col-6">
+            <form [formGroup]="invoiceInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="jdeOrderNumber">JDE Order Number</label>
+                <input pInputText id="jdeOrderNumber" formControlName="jdeOrderNumber" />
+              </div>
+              <div class="field">
+                <label for="company">Company</label>
+                <p-dropdown
+                  id="company"
+                  formControlName="company"
+                  [options]="[{label: '10300', value: '10300'}]"
+                  placeholder="Select Company">
+                </p-dropdown>
+              </div>
+            </form>
+            <form [formGroup]="processingInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="invoiceDescription">Invoice Description</label>
+                <input pInputText id="invoiceDescription" formControlName="invoiceDescription" />
+              </div>
+              <div class="field">
+                <label for="voucherNumber">Voucher Number</label>
+                <input pInputText id="voucherNumber" formControlName="voucherNumber" />
+              </div>
+            </form>
+          </div>
+
+          <!-- Right Column -->
+          <div class="col-6">
+            <form [formGroup]="invoiceInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="apInvoiceType">AP Invoice Type</label>
+                <p-dropdown
+                  id="apInvoiceType"
+                  formControlName="apInvoiceType"
+                  [options]="[{label: 'PO', value: 'PO'}, {label: 'Standard', value: 'STD'}]"
+                  placeholder="Select Type">
+                </p-dropdown>
+              </div>
+              <div class="field">
+                <label for="legacyOrderNumber">Legacy Order Number</label>
+                <input pInputText id="legacyOrderNumber" formControlName="legacyOrderNumber" />
+              </div>
+              <div class="field">
+                <label for="orderType">Order Type</label>
+                <input pInputText id="orderType" formControlName="orderType" />
+              </div>
+              <div class="field">
+                <label for="category">Category</label>
+                <input pInputText id="category" formControlName="category" />
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <hr class="my-4" />
+        <h3 class="mb-3">JDE Data</h3>
+
+        <div class="grid">
+          <div class="col-6">
+            <form [formGroup]="processingInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="checkNumber">Check Number</label>
+                <input pInputText id="checkNumber" formControlName="checkNumber" />
+              </div>
+            </form>
+          </div>
+          <div class="col-6">
+            <form [formGroup]="processingInfoForm" class="p-fluid">
+              <div class="field">
+                <label for="checkDate">Check Date</label>
+                <p-calendar
+                  id="checkDate"
+                  formControlName="checkDate"
+                  dateFormat="mm/dd/yy"
+                  [showIcon]="true">
+                </p-calendar>
+              </div>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+
+    </p-tabView>
+    </div>
+
+    <!-- Right Column - PDF Viewer -->
+    <div *ngIf="pdfUrl" class="col-6">
+      <div class="pdf-panel">
+        <div class="flex justify-content-center align-items-center mb-2">
+          <div class="flex gap-1">
+            <p-button
+              icon="pi pi-minus"
+              size="small"
+              title="Zoom Out"
+              [disabled]="scale <= 0.5"
+              (onClick)="zoomOut()">
+            </p-button>
+            <p-button
+              icon="pi pi-plus"
+              size="small"
+              title="Zoom In"
+              (onClick)="zoomIn()">
+            </p-button>
+            <p-button
+              icon="pi pi-arrows-h"
+              size="small"
+              title="Fit to Width"
+              (onClick)="fitToWidth()">
+            </p-button>
+            <p-button
+              icon="pi pi-chevron-left"
+              size="small"
+              title="Previous Page"
+              [disabled]="currentPage <= 1"
+              (onClick)="previousPage()">
+            </p-button>
+            <span class="flex align-items-center px-2 text-sm">{{ currentPage }} / {{ totalPages }}</span>
+            <p-button
+              icon="pi pi-chevron-right"
+              size="small"
+              title="Next Page"
+              [disabled]="currentPage >= totalPages"
+              (onClick)="nextPage()">
+            </p-button>
+            <p-button
+              icon="pi pi-download"
+              size="small"
+              title="Download PDF"
+              (onClick)="downloadPdf()">
+            </p-button>
+            <p-button
+              icon="pi pi-external-link"
+              size="small"
+              severity="secondary"
+              title="Open in New Tab"
+              (onClick)="openPdfInNewTab()">
+            </p-button>
+            <p-button
+              icon="pi pi-times"
+              size="small"
+              severity="danger"
+              title="Hide PDF"
+              (onClick)="hidePdf()">
+            </p-button>
+          </div>
+        </div>
+        
+        <div class="pdf-viewer-container" style="border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa; overflow: auto; height: 650px; text-align: center; position: relative;">
+          <!-- Loading indicator -->
+          <div *ngIf="pdfLoading" class="flex align-items-center justify-content-center" style="height: 100%;">
+            <p-progressSpinner [style]="{ width: '50px', height: '50px' }"></p-progressSpinner>
+            <span class="ml-3">Loading PDF...</span>
+          </div>
+
+          <!-- PDF Canvas -->
+          <canvas
+            #pdfCanvas
+            *ngIf="pdfUrl && !pdfLoadError && !pdfLoading"
+            style="display: block; margin: 10px auto; border: none;">
+          </canvas>
+
+          <!-- Status Stamp Overlay -->
+          <div *ngIf="pdfUrl && !pdfLoadError && !pdfLoading"
+               [ngClass]="{
+                 'status-stamp': true,
+                 'status-approved': invoice.invoiceStatus === 'Approved',
+                 'status-rejected': invoice.invoiceStatus === 'Rejected',
+                 'status-received': invoice.invoiceStatus !== 'Approved' && invoice.invoiceStatus !== 'Rejected'
+               }">
+            <span *ngIf="invoice.invoiceStatus === 'Approved'">APPROVED</span>
+            <span *ngIf="invoice.invoiceStatus === 'Rejected'">REJECTED</span>
+            <span *ngIf="invoice.invoiceStatus !== 'Approved' && invoice.invoiceStatus !== 'Rejected'">RECEIVED</span>
+          </div>
+
+          <!-- Error message -->
+          <div *ngIf="pdfLoadError" class="text-center p-4">
+            <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #f56565;"></i>
+            <p class="mt-2">Unable to load PDF document.</p>
+            <p-button
+              label="Download PDF"
+              icon="pi pi-download"
+              (onClick)="downloadPdf()">
+            </p-button>
+          </div>
+        </div>
+        
+        <!-- Scale indicator -->
+        <div class="text-center mt-2">
+          <small class="text-color-secondary">Zoom: {{ (scale * 100) | number:'1.0-0' }}%</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

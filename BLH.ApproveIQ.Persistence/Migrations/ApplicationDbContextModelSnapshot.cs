@@ -160,6 +160,9 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("InvoiceNumber")
+                        .HasColumnType("varchar(20)");
+
                     b.Property<string>("InvoiceStatus")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -200,6 +203,9 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                     b.Property<string>("PaymentTerms")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PdfFileName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uniqueidentifier");
@@ -266,6 +272,8 @@ namespace BLH.ApproveIQ.Persistence.Migrations
                     b.HasIndex("CurrentlyAssignedToUserId");
 
                     b.HasIndex("InvoiceDate");
+
+                    b.HasIndex("InvoiceNumber");
 
                     b.HasIndex("InvoiceStatus");
 

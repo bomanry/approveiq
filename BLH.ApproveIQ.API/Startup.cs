@@ -130,11 +130,17 @@ namespace BLH.ApproveIQ.API
 
             //app.EnsureDbIsMigrated().Wait();
 
-            app.UseHttpsRedirection();
+            if (!env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();    
+            }
+            
+            // Enable serving static files from wwwroot
+            app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseCors(x => x
                 .AllowAnyOrigin()

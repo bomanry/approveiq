@@ -19,8 +19,10 @@ export class HeaderComponent extends ComponentBase implements OnInit {
   }
 
   items$: BehaviorSubject<MenuItem[]> = new BehaviorSubject<MenuItem[]>([]);
+  logoutItem$: BehaviorSubject<MenuItem | null> = new BehaviorSubject<MenuItem | null>(null);
 
   items = this.items$.asObservable();
+  logoutItem = this.logoutItem$.asObservable();
 
   ngOnInit(): void {
     // Subscribe to auth service login status changes
@@ -33,20 +35,40 @@ export class HeaderComponent extends ComponentBase implements OnInit {
   }
 
   setLoginDisplay() {
-      //non admin routes
-      let items: MenuItem[] = [
+      // Navigation items (left side)
+      let navigationItems: MenuItem[] = [
         {
-          label: 'Logout',
+          label: 'Dashboard',
+          icon: 'pi pi-home',
           command: (() => {
-            this.authService.logout();
+            this.router.navigate(['/home']);
           })
         },
+        {
+          label: 'All Invoices',
+          icon: 'pi pi-list',
+          command: (() => {
+            this.router.navigate(['/invoices']);
+          })
+        }
       ];
+
+      // Logout item (right side)
+      let logoutItem: MenuItem = {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        command: (() => {
+          this.authService.logout();
+        })
+      };
+
       if (this.isLoggedIn) {
-        this.items$.next(items);
+        this.items$.next(navigationItems);
+        this.logoutItem$.next(logoutItem);
       }
       else {
         this.items$.next([]);
+        this.logoutItem$.next(null);
       }
   }
 

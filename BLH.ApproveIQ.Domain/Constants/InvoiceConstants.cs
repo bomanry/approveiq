@@ -3,7 +3,7 @@ namespace BLH.ApproveIQ.Domain.Constants;
 public static class InvoiceStatuses
 {
     public const string New = "New";
-    public const string PendingApproval = "Pending Approval";
+    public const string PendingApproval = "PendingApproval";
     public const string Approved = "Approved";
     public const string Rejected = "Rejected";
     public const string Paid = "Paid";

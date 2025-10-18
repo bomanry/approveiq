@@ -12,6 +12,20 @@ public class CurrentUserService : ICurrentUserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public Guid? UserId => new Guid(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
-    public bool UserExists => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier) != null;
+    public Guid? UserId
+    {
+        get
+        {
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
+        }
+    }
+
+    public bool UserExists => UserId.HasValue;
+
+    public string? Email => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email);
+
+    public string? FirstName => _httpContextAccessor.HttpContext?.User?.FindFirstValue("FirstName");
+
+    public string? LastName => _httpContextAccessor.HttpContext?.User?.FindFirstValue("LastName");
 }

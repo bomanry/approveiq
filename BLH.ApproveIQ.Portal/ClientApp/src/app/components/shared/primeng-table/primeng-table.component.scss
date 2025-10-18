@@ -12,3 +12,42 @@
   color: var(--maroon);
   cursor: pointer;
 }
+
+// Consistent grey table header styling
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background-color: #f8f9fa !important;
+  border-color: #dee2e6 !important;
+  color: #495057 !important;
+  font-weight: 600 !important;
+}
+
+// Ensure header hover states are also consistent
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th:hover {
+  background-color: #f8f9fa !important;
+}
+
+// Make sure sorting icons are visible on grey background
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th .p-sortable-column-icon {
+  color: #6c757d !important;
+}
+
+// Column filter styling to match header
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th .p-column-filter {
+  color: #495057 !important;
+}
+
+// Responsive button visibility - hide mobile buttons on desktop
+:host ::ng-deep .p-mobile-table-button {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  // On mobile, hide desktop buttons and show mobile buttons
+  :host ::ng-deep .p-desktop-table-button {
+    display: none !important;
+  }
+  
+  :host ::ng-deep .p-mobile-table-button {
+    display: table-cell !important;
+  }
+}

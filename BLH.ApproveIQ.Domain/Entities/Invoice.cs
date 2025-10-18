@@ -5,6 +5,7 @@ namespace BLH.ApproveIQ.Domain.Entities;
 public class Invoice : AuditableEntity
 {
     // --- Invoice Info (top bar) ---
+    public string? InvoiceNumber { get; set; }           // "Invoice Number" - varchar(20)
     public string? ApInvoiceType { get; set; }           // "AP Invoice Type"
     public string? InvoiceStatus { get; set; }           // "Invoice Status"
     public string? LegacyOrderNumber { get; set; }       // "Legacy Order Number"
@@ -61,6 +62,9 @@ public class Invoice : AuditableEntity
     public string? VoucherNumber { get; set; }           // "Voucher Number"
     public string? CheckNumber { get; set; }             // "Check Number"
     public DateTime? CheckDate { get; set; }             // "Check Date"
+
+    // --- Document Info ---
+    public string? PdfFileName { get; set; }             // Associated PDF file name
 
     // --- Navigation Properties ---
     public List<InvoiceItem> Lines { get; set; } = new();

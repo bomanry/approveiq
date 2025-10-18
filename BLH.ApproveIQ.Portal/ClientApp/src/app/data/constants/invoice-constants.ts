@@ -1,6 +1,6 @@
 export class InvoiceStatuses {
   static readonly New = 'New';
-  static readonly PendingApproval = 'Pending Approval';
+  static readonly PendingApproval = 'PendingApproval';
   static readonly Approved = 'Approved';
   static readonly Rejected = 'Rejected';
   static readonly Paid = 'Paid';

@@ -1,6 +1,9 @@
 namespace BLH.ApproveIQ.Domain.Services;
 public interface ICurrentUserService
 {
-    public Guid? UserId => null;
-    public bool UserExists => false;
+    Guid? UserId { get; }
+    bool UserExists { get; }
+    string? Email { get; }
+    string? FirstName { get; }
+    string? LastName { get; }
 }

@@ -16,6 +16,7 @@ internal sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.HasQueryFilter(x => !x.IsDeleted);
 
         // Invoice Info properties
+        builder.Property(x => x.InvoiceNumber).HasColumnType("varchar(20)");
         builder.Property(x => x.ApInvoiceType).HasMaxLength(50);
         builder.Property(x => x.InvoiceStatus).HasMaxLength(50);
         builder.Property(x => x.LegacyOrderNumber).HasMaxLength(100);
@@ -74,6 +75,7 @@ internal sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
             .HasForeignKey(x => x.InvoiceId);
 
         // Indexes for performance
+        builder.HasIndex(x => x.InvoiceNumber); // For fast invoice number lookups
         builder.HasIndex(x => x.BuJobNumber); // For linking to Project.ReferenceId
         builder.HasIndex(x => x.ProjectId);
         builder.HasIndex(x => x.CurrentlyAssignedToUserId);

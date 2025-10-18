@@ -22,7 +22,8 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "file-saver"
+              "file-saver",
+              "pdfjs-dist"
             ],
             "progress": false,
             "outputPath": "dist",
@@ -135,7 +136,8 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 44428
+            "port": 44428,
+            "ssl": false
           }
         },
         "extract-i18n": {
